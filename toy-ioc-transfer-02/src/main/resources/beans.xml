@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans>
+    <bean id="accountDao" class="org.example.ioc.dao.impl.JdbcAccountDaoImpl">
+        <property ref="connectionUtils" name="ConnectionUtils"></property>
+    </bean>
+
+    <bean id="transferService" class="org.example.ioc.service.impl.TransferServiceImpl">
+        <property name="AccountDao" ref="accountDao"></property>
+    </bean>
+
+    <bean id="connectionUtils" class="org.example.ioc.utils.ConnectionUtils"></bean>
+
+    <!--事务管理器-->
+    <bean id="transactionManager" class="org.example.ioc.utils.TransactionManager">
+        <property name="ConnectionUtils" ref="connectionUtils"></property>
+    </bean>
+
+    <!--代理工厂-->
+    <bean id="proxyFactory" class="org.example.ioc.factory.ProxyFactory">
+        <property name="TransactionManager" ref="transactionManager"></property>
+    </bean>
+</beans>
