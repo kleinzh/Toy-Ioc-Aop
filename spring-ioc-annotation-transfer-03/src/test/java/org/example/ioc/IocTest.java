@@ -2,8 +2,10 @@ package org.example.ioc;
 
 import org.example.ioc.dao.AccountDao;
 import org.example.ioc.utils.ConnectionUtils;
+import org.example.ioc.utils.SpringConfig;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.sql.Connection;
@@ -22,7 +24,7 @@ public class IocTest {
         /**
          * 通过读取classpath下的xml文件来启动容器
          */
-        ClassPathXmlApplicationContext applicationContext=new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+        AnnotationConfigApplicationContext applicationContext=new AnnotationConfigApplicationContext(SpringConfig.class);
 
         AccountDao accountDao= (AccountDao) applicationContext.getBean("jdbcAccountDaoImpl");
 
@@ -35,18 +37,4 @@ public class IocTest {
         applicationContext.close();
     }
 
-    @Test
-    public void testCreateBeanIoc() {
-
-        /**
-         * 通过读取classpath下的xml文件来启动容器
-         */
-        ApplicationContext applicationContext=new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
-
-        ConnectionUtils connectionUtils= (ConnectionUtils) applicationContext.getBean("connectionUtils");
-
-        System.out.println(connectionUtils);
-
-
-    }
 }
