@@ -4,7 +4,33 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="accountDao" class="org.example.ioc.dao.impl.JdbcAccountDaoImpl" scope="prototype"
             init-method="init" destroy-method="destroyed">
-        <property ref="connectionUtils" name="ConnectionUtils"></property>
+        <!--set注入使用property标签，如果注入的是另外一个bean那么使用ref属性，如果注入普通值就是value属性-->
+<!--        <property ref="connectionUtils" name="ConnectionUtils"></property>-->
+        <constructor-arg ref="connectionUtils" name="connectionUtils"></constructor-arg>
+        <constructor-arg value="klein" name="name"></constructor-arg>
+
+        <property name="myArray">
+            <array>
+                <value>array1</value>
+            </array>
+        </property>
+        <property name="myMap">
+            <map>
+                <entry key="key1" value="value1"></entry>
+            </map>
+        </property>
+        <property name="mySet">
+            <set>
+                <value>set1</value>
+                <value>set2</value>
+            </set>
+        </property>
+        <property name="myProperties">
+            <props>
+                <prop key="p1">v1</prop>
+                <prop key="p2">v1</prop>
+            </props>
+        </property>
     </bean>
 
     <bean id="transferService" class="org.example.ioc.service.impl.TransferServiceImpl">
@@ -25,12 +51,12 @@
 
     <!-- Spring ioc实例化Bean的三种方式-->
     <!-- 方法一: 使用无参构造函数(推荐) -->
-<!--    <bean id="connectionUtils" class="org.example.ioc.utils.ConnectionUtils"></bean>-->
+    <bean id="connectionUtils" class="org.example.ioc.utils.ConnectionUtils"></bean>
 
     <!-- 另外两种方式是为了我们自己new的对象加入到Spring IOC容器里面 ioc实例化Bean的三种方式-->
     <!-- 方法二: 使用静态方法 -->
 <!--    <bean id="connectionUtils" class="org.example.ioc.factory.CreateBeanFactory" factory-method="getInstanceStatic"></bean>-->
-    <!-- 方法二: 使用实例化方法 -->
-    <bean id="createBeanFactory" class="org.example.ioc.factory.CreateBeanFactory"></bean>
-    <bean id="connectionUtils" factory-bean="createBeanFactory" factory-method="getInstance"></bean>
+<!--    &lt;!&ndash; 方法二: 使用实例化方法 &ndash;&gt;-->
+<!--    <bean id="createBeanFactory" class="org.example.ioc.factory.CreateBeanFactory"></bean>-->
+<!--    <bean id="connectionUtils" factory-bean="createBeanFactory" factory-method="getInstance"></bean>-->
 </beans>
