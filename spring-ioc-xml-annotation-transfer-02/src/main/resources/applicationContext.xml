@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-       https://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context
-       https://www.springframework.org/schema/context/spring-context.xsd">
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+">
 
     <!--  -->
     <context:component-scan base-package="org.example.ioc"></context:component-scan>
@@ -18,5 +23,25 @@
         <property name="username" value="${jdbc.username}"></property>
         <property name="password" value="${jdbc.password}"></property>
    </bean>
+
+    <!-- 使用config标签表明开始aop配置，在内部配置切面aspect-->
+    <bean id="logUtils" class="org.example.ioc.utils.LogUtils"></bean>
+    <aop:config>
+        <aop:aspect id="logAspect" ref="logUtils">
+            <!-- 切入点锁定我们感兴趣的方法，使用aspectj语法表达式-->
+            <aop:pointcut id="pt1" expression="execution(public void org.example.ioc.service.impl.TransferServiceImpl.transfer(String,String,int))"/>
+            <!--方位信息 关联切入点-->
+            <!-- 前置增强 -->
+            <aop:before method="beforeMethod" pointcut-ref="pt1"></aop:before>
+            <!--正常执行通知-->
+            <aop:after-returning method="successMethod" pointcut-ref="pt1"></aop:after-returning>
+            <!--异常抛出时候执行-->
+            <aop:after-throwing method="exceptionMethod" pointcut-ref="pt1"></aop:after-throwing>
+            <!-- 最终通知，无论如何都执行-->
+            <aop:after method="afterMethod" pointcut-ref="pt1"></aop:after>
+            <!-- 环绕通知，控制增强代码何时执⾏的通知类型 -->
+            <aop:around method="arroundMethod" pointcut-ref="pt1"></aop:around>
+        </aop:aspect>
+    </aop:config>
 
 </beans>
